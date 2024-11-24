@@ -4,6 +4,8 @@ data/Predios_Santiago.geojson
 
 shapes-test.ipynb
 
+# Salidas de mapas en html
+*.html
 
 .idea/
 
