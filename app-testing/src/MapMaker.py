@@ -1,3 +1,4 @@
+from typing import Tuple
 import os
 import geopandas as gpd
 from shapely.geometry import box
@@ -6,16 +7,23 @@ from branca.colormap import LinearColormap
 
 
 class MapMaker:
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-    def filter_geojson_by_bbox(self, input_geojson_path, bbox):
+    def filter_geojson_by_bbox(
+            self,
+            input_geojson_path: str,
+            esquina_superior_izquierda: Tuple[float, float],
+            esquina_inferior_derecha: Tuple[float, float]
+    ) -> str:
         """
-        Filtra un GeoJSON para incluir solo las geometrías dentro del bounding box y guarda el resultado en 'out'.
+        Filtra un GeoJSON para incluir solo las geometrías dentro del bounding box definido por dos esquinas
+        y guarda el resultado en la carpeta 'out'.
 
         Args:
             input_geojson_path (str): Ruta del archivo GeoJSON de entrada.
-            bbox (tuple): Bounding box en formato (lon_min, lat_min, lon_max, lat_max).
+            esquina_superior_izquierda (Tuple[float, float]): Coordenadas de la esquina superior izquierda (lat, lon).
+            esquina_inferior_derecha (Tuple[float, float]): Coordenadas de la esquina inferior derecha (lat, lon).
 
         Returns:
             str: Ruta del GeoJSON filtrado.
@@ -28,24 +36,31 @@ class MapMaker:
             gdf.set_crs(epsg=4326, inplace=True)
 
         # Crear el bounding box como un polígono
-        lon_min, lat_min, lon_max, lat_max = bbox
+        lat_min, lon_min = esquina_inferior_derecha
+        lat_max, lon_max = esquina_superior_izquierda
         bbox_polygon = box(lon_min, lat_min, lon_max, lat_max)
 
         # Filtrar las geometrías que intersectan el bounding box
         filtered_gdf = gdf[gdf.geometry.intersects(bbox_polygon)]
 
         # Preparar la carpeta y el nombre del archivo de salida
-        output_dir = "../out"
+        output_dir = "out"
         os.makedirs(output_dir, exist_ok=True)  # Crear la carpeta si no existe
         input_filename = os.path.splitext(os.path.basename(input_geojson_path))[0]
-        coordinates_suffix = f"-filtered-{lon_min}_{lat_min}_{lon_max}_{lat_max}"
+        coordinates_suffix = f"-filtered-{lat_max}_{lon_max}_{lat_min}_{lon_min}"
         output_geojson_path = os.path.join(output_dir, f"{input_filename}{coordinates_suffix}.geojson")
 
         # Guardar el GeoJSON filtrado
         filtered_gdf.to_file(output_geojson_path, driver="GeoJSON")
         return output_geojson_path
 
-    def generate_heatmap(self, input_geojson_path, parameter, output_html_path, title="Mapa de Calor"):
+    def generate_heatmap(
+            self,
+            input_geojson_path: str,
+            parameter: str,
+            output_html_path: str,
+            title: str = "Mapa de Calor"
+    ) -> None:
         """
         Genera un mapa de calor basado en un parámetro dado de un GeoJSON.
 
