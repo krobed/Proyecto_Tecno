@@ -27,24 +27,14 @@ def formulario_view(request):
         if form.is_valid():
             latitud = form.cleaned_data['latitud']
             longitud = form.cleaned_data['longitud']
+            estructura = form.cleaned_data['estructura']
+            capacidad = form.cleaned_data['capacidad']
             # Aquí puedes manejar las coordenadas, como guardarlas en la base de datos
-            return HttpResponse(f"Coordenadas recibidas: Latitud {latitud}, Longitud {longitud}")
+            return HttpResponse(f"Coordenadas recibidas: Latitud {latitud}, Longitud {longitud}, Estructura {estructura}, Capacidad {capacidad}")
     else:
         form = CoordenadasForm()
     return render(request, 'formulario.html', {'form': form})
 
-def guardar_coordenadas(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        lat = data.get("latitud")
-        lng = data.get("longitud")
-
-        if lat is not None and lng is not None:
-            coordenada = Coordenada.objects.create(latitud=lat, longitud=lng)
-            return JsonResponse({"mensaje": "Coordenada guardada", "id": coordenada.id}, status=201)
-        return JsonResponse({"error": "Datos inválidos"}, status=400)
-
-    return JsonResponse({"error": "Método no permitido"}, status=405)
 
 def index(request):
     global comunas
@@ -83,7 +73,5 @@ def goto(request):
                 return render(request, f'mapa_calor-EOD_{nombre}.html')
  
     
-def map_view(request):
 
-    return render(request, 'map.html')
 
