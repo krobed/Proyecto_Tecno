@@ -5,19 +5,14 @@ import time
 import sys
 import os
 import yaml
-import geocoder
+path = os.path.abspath(r"")
+sys.path.insert(1,path[:-16])
+print(path[:-16])
+from app_testing.test.mapmakereodtest import map_maker_eod
+from app_testing.test.mapmakertest import map_maker
+pato = path[:-16]
 
-sys.path.insert(1, '/home/winkrobed/Proyecto_Tecno/app-testing/test')
-from mapmakereodtest import map_maker_eod
-from mapmakertest import map_maker
-sys.path.insert(2, '/home/winkrobed/Proyecto_Tecno/data')
-comunas = yaml.safe_load(open('/home/winkrobed/Proyecto_Tecno/data/poligonos_comuna.yml','r'))
-
-import folium as fl
-from streamlit_folium import st_folium
-import streamlit as st
-from django.http import JsonResponse
-from .models import Coordenada
+comunas = yaml.safe_load(open(f'{pato}/data/poligonos_comuna.yml','r'))
 from .forms import CoordenadasForm
 import json
 
@@ -52,21 +47,21 @@ def goto(request):
     else:
         raise IndexError
     if "densidad" in request.POST:
-        if os.path.exists(f'/home/winkrobed/Proyecto_Tecno/DJANGOUNCHAINED/polls/templates/mapa_calor_{nombre}.html'):
+        if os.path.exists(f'{pato}/DJANGOUNCHAINED/polls/templates/mapa_calor_{nombre}.html'):
             return render(request, f'mapa_calor_{nombre}.html')
         else:
             map_maker(inf_der,sup_izq, nombre)
-            if os.path.exists(f'/home/winkrobed/Proyecto_Tecno/DJANGOUNCHAINED/polls/templates/mapa_calor_{nombre}.html'):
+            if os.path.exists(f'{pato}/DJANGOUNCHAINED/polls/templates/mapa_calor_{nombre}.html'):
                 return render(request, f'mapa_calor_{nombre}.html')
             else:
                 time.sleep(1)
                 return render(request, f'mapa_calor_{nombre}.html')
     if "eod" in request.POST:
-        if os.path.exists(f'/home/winkrobed/Proyecto_Tecno/DJANGOUNCHAINED/polls/templates/mapa_calor-EOD_{nombre}.html'):
+        if os.path.exists(f'{pato}/DJANGOUNCHAINED/polls/templates/mapa_calor-EOD_{nombre}.html'):
             return render(request, f'mapa_calor-EOD_{nombre}.html')
         else:
             map_maker_eod(inf_der,sup_izq,nombre)
-            if os.path.exists(f'/home/winkrobed/Proyecto_Tecno/DJANGOUNCHAINED/polls/templates/mapa_calor-EOD_{nombre}.html'):
+            if os.path.exists(f'{pato}/DJANGOUNCHAINED/polls/templates/mapa_calor-EOD_{nombre}.html'):
                 return render(request, f'mapa_calor-EOD_{nombre}.html')
             else:
                 time.sleep(1)
