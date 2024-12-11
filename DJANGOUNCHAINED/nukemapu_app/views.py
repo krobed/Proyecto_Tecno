@@ -29,6 +29,17 @@ def formulario_view(request):
         form = CoordenadasForm()
     return render(request, 'formulario.html', {'form': form})
 
+def home(request):
+    if request.method =="POST":
+        if 'mapa' in request.POST:
+            form = CoordenadasForm()
+            return render(request, "formulario.html", {'form': form})
+        else:
+            global comunas
+            return render(request,"home.html",context= comunas)
+    else:
+        return render(request, "index.html")
+    
 
 def index(request):
     global comunas
