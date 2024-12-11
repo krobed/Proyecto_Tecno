@@ -1,3 +1,6 @@
+# POR FAVOR INSTALAR GPD CON EL SIGUIENTE COMANDO
+# pip install git+https://github.com/davidbailey/dpd.git
+
 folium~=0.18.0
 geopandas~=1.0.1
 python-dotenv~=1.0.1
@@ -5,5 +8,8 @@ shapely~=2.0.6
 branca~=0.8.0
 django~=5.1.3
 pandas~=2.2.3
-yaml~=0.2.5
 pyyaml~=6.0.2
+
+
+dash~=2.18.2
+plotly~=5.24.1
