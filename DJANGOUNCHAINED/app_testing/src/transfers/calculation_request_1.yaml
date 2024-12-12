@@ -1,0 +1,18 @@
+Building_1:
+  #ver building_templates.yaml
+  type: mall
+  coords: [-33.45156751527478, -70.68407324203322]
+
+Building_2:
+  #ver building_templates.yaml
+  type: parque_grande
+  coords: [-33.45156751527478, -70.68407324203322]
+
+Building_3:
+  #ver building_templates.yaml
+  type: complejo_apartamentos
+  coords: [-33.45156751527478, -70.68407324203322]
+
+# La idea es que siga enumerando todos los puntos que el weon haya seleccionado en el mapa, uno por uno
+# Puedes para generar este yaml, ir agregando uno por uno los edificios con las coordenadas a un dict de python
+# despues llegas y lo pasas a yaml con la libreria, y le dejas el nombre "calculation_request_n"
