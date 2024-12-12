@@ -5,7 +5,7 @@ from app_testing.src.MapMaker import MapMaker
 pato = path
 
 def map_maker(inf_der,sup_izq, comuna):
-    input_geojson = f"{pato}/data/xn--Poblacin_Total_Santiago_de_Chile_2012-cud.geojson"
+    input_geojson = f"{pato}/nukemapu_app/static/xn--Poblacin_Total_Santiago_de_Chile_2012-cud.geojson"
 
     map_maker = MapMaker()
     filtered_geojson = map_maker.filter_geojson_by_bbox(input_geojson, sup_izq,inf_der)

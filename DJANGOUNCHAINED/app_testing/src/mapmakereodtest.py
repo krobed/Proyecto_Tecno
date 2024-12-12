@@ -6,7 +6,7 @@ pato = path
 
 
 def map_maker_eod(inf_der,sup_izq, comuna):
-    input_geojson = f"{pato}/data/Cantidad_de_viajes_de_destino_EOD_06.geojson"
+    input_geojson = f"{pato}/nukemapu_app/static/Cantidad_de_viajes_de_destino_EOD_06.geojson"
 
     map_maker = MapMaker()
     filtered_geojson = map_maker.filter_geojson_by_bbox(input_geojson,sup_izq,inf_der)

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario con Coordenadas</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/static/cover.css" /> <!-- Enlace al archivo CSS -->
+    <style>
+        #map-container {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            margin: 20px auto;
+            border: 1px solid #fff; /* Borde blanco para integrarse al estilo */
+            border-radius: 8px;
+            box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.5); /* Sombra consistente con el fondo */
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+        form {
+            text-align: center;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.1); /* Fondo translúcido */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.5); /* Sombra similar al mapa */
+        }
+        form button {
+            background-color: #fff; /* Botón blanco */
+            color: #333; /* Texto oscuro */
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 0.05rem solid #fff;
+            border-radius: 5px;
+            text-shadow: none; /* Sin sombra de texto */
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #ccc; /* Color más oscuro al pasar el mouse */
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="cover-container">
+        <header class="masthead">
+            <h1>Selecciona un punto en el mapa</h1>
+        </header>
+        <main>
+            <div id="map-container">
+                <div id="map"></div>
+            </div>
+            <form method="POST" action="mapa">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn-lg">Enviar Coordenadas</button>
+            </form>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([-33.4489, -70.6693], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        var currentMarker = null;
+
+        map.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+
+            currentMarker = L.marker([lat, lng]).addTo(map);
+
+            document.querySelector('[name="latitud"]').value = lat;
+            document.querySelector('[name="longitud"]').value = lng;
+        });
+    </script>
+</body>
+</html>
