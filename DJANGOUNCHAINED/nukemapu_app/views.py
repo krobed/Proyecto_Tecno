@@ -11,7 +11,7 @@ from app_testing.src.mapmakereodtest import map_maker_eod
 from app_testing.src.mapmakertest import map_maker
 pato = path
 
-comunas = yaml.safe_load(open(f'{pato}/data/poligonos_comuna.yml','r'))
+comunas = yaml.safe_load(open(f'{pato}/nukemapu_app/static/poligonos_comuna.yml','r'))
 from .forms import CoordenadasForm
 import json
 
@@ -57,21 +57,21 @@ def goto(request):
     else:
         raise IndexError
     if "densidad" in request.POST:
-        if os.path.exists(f'{pato}/DJANGOUNCHAINED/polls/templates/mapa_calor_{nombre}.html'):
+        if os.path.exists(f'{pato}/nukemapu_app/templates/mapa_calor_{nombre}.html'):
             return render(request, f'mapa_calor_{nombre}.html')
         else:
             map_maker(inf_der,sup_izq, nombre)
-            if os.path.exists(f'{pato}/DJANGOUNCHAINED/polls/templates/mapa_calor_{nombre}.html'):
+            if os.path.exists(f'{pato}/nukemapu_app/templates/mapa_calor_{nombre}.html'):
                 return render(request, f'mapa_calor_{nombre}.html')
             else:
                 time.sleep(1)
                 return render(request, f'mapa_calor_{nombre}.html')
     if "eod" in request.POST:
-        if os.path.exists(f'{pato}/DJANGOUNCHAINED/polls/templates/mapa_calor-EOD_{nombre}.html'):
+        if os.path.exists(f'{pato}/nukemapu_app/templates/mapa_calor-EOD_{nombre}.html'):
             return render(request, f'mapa_calor-EOD_{nombre}.html')
         else:
             map_maker_eod(inf_der,sup_izq,nombre)
-            if os.path.exists(f'{pato}/DJANGOUNCHAINED/polls/templates/mapa_calor-EOD_{nombre}.html'):
+            if os.path.exists(f'{pato}/nukemapu_app/templates/mapa_calor-EOD_{nombre}.html'):
                 return render(request, f'mapa_calor-EOD_{nombre}.html')
             else:
                 time.sleep(1)
