@@ -1,0 +1,12 @@
+requests:
+  - ["mall", [-33.45156751527478, -70.68407324203322]]
+  - ["parque_grande", [-33.45156751527478, -70.68407324203322]]
+  - ["complejo_apartamentos", [-33.45156751527478, -70.68407324203322]]
+
+
+# Que quede un timestamp de la request, algo asi
+timestamp: "2024-12-23 12:00:02"
+
+# La idea es que siga enumerando todos los puntos que el weon haya seleccionado en el mapa, uno por uno
+# Puedes para generar este yaml, ir agregando uno por uno los edificios con las coordenadas a un dict de python
+# despues llegas y lo pasas a yaml con la libreria, y le dejas el nombre "calculation_request_n"
