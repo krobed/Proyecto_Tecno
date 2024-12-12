@@ -1,9 +1,8 @@
 from django import forms
 
-c= [("Edificio", "Edificio"),("Mall", "Mall"),("Restaurante", "Restaurante"),("Parque", "Parque")]
+c= [("Edificio", "Edificio"),("Mall", "Mall"),("Parque", "Parque")]
 
 class CoordenadasForm(forms.Form):
-    latitud = forms.FloatField(widget=forms.HiddenInput())
-    longitud = forms.FloatField(widget=forms.HiddenInput())
+    todos_los_marcadores = forms.CharField(widget=forms.HiddenInput(), required=False)
     estructura = forms.ChoiceField(choices = c)
     capacidad = forms.IntegerField(max_value=5000)

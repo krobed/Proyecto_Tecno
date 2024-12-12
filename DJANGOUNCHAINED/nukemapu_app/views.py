@@ -2,10 +2,11 @@ from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 import time
+from datetime import datetime as dt
 import sys
 import os
 import yaml
-
+import numpy as np
 path = os.path.abspath(r"")
 print(path)
 from app_testing.src.mapmakereodtest import map_maker_eod
@@ -14,6 +15,9 @@ from app_testing.src.mapmakertest import map_maker
 pato = path
 
 comunas = yaml.safe_load(open(f'{pato}/nukemapu_app/static/poligonos_comuna.yml', 'r'))
+yaml_path = f'{pato}/app_testing/src/requests/'
+if not os.path.exists(yaml_path):
+    os.mkdir(yaml_path)
 from .forms import CoordenadasForm
 import json
 
@@ -22,16 +26,35 @@ def formulario_view(request):
     if request.method == "POST":
         form = CoordenadasForm(request.POST)
         if form.is_valid():
-            latitud = form.cleaned_data['latitud']
-            longitud = form.cleaned_data['longitud']
+            # Obtener todos los marcadores como lista de coordenadas
+            todos_los_marcadores = form.cleaned_data['todos_los_marcadores']
             estructura = form.cleaned_data['estructura']
-            capacidad = form.cleaned_data['capacidad']
-            # Aquí puedes manejar las coordenadas, como guardarlas en la base de datos
-            return HttpResponse(
-                f"Coordenadas recibidas: Latitud {latitud}, Longitud {longitud}, Estructura {estructura}, Capacidad {capacidad}")
+            estructura = estructura.lower()
+            if estructura == 'parque':
+                estructura ='parque_grande'
+            else:
+                estructura = 'complejo_apartamentos'
+            
+            marcadores = json.loads(todos_los_marcadores) if todos_los_marcadores else []
+            l = []
+            for marcador in marcadores:
+                l.append({'type':estructura,'coordinates':marcador})
+            # Procesar la lista de marcadores
+            
+            if not os.path.exists(f'{yaml_path}/calculation_request.yaml'):
+                yamil =open(f'{yaml_path}/calculation_request.json', 'x',)
+            else:
+                yamil =  open(f'{yaml_path}/calculation_request.json', 'w',)
+            
+            json.dump({'request':l,'timestamp':str(dt.now())},yamil)
+            
+            yamil.close()
+            return HttpResponse(f"Se recibieron {len(marcadores)} marcadores: {marcadores}.")
     else:
         form = CoordenadasForm()
     return render(request, 'formulario.html', {'form': form})
+
+
 
 
 def home(request):

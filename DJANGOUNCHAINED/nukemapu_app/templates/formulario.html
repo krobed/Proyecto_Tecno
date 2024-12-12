@@ -62,6 +62,8 @@
             <form method="POST" action="mapa">
                 {% csrf_token %}
                 {{ form.as_p }}
+                <input type="hidden" name="todos_los_marcadores" id="todos_los_marcadores">
+                <button type="button" id="removeLastMarker" class="btn-lg">Eliminar Último Marcador</button>                
                 <button type="submit" class="btn-lg">Enviar Coordenadas</button>
             </form>
         </main>
@@ -75,21 +77,46 @@
             maxZoom: 19
         }).addTo(map);
 
-        var currentMarker = null;
+        var markers = []; // Lista para almacenar las coordenadas de los marcadores
 
         map.on('click', function(e) {
             var lat = e.latlng.lat;
             var lng = e.latlng.lng;
 
-            if (currentMarker) {
-                map.removeLayer(currentMarker);
-            }
+            // Crear y agregar un nuevo marcador al mapa
+            var newMarker = L.marker([lat, lng]).addTo(map);
 
-            currentMarker = L.marker([lat, lng]).addTo(map);
+            // Agregar las coordenadas del nuevo marcador a la lista
+            markers.push({ lat: lat, lng: lng });
 
-            document.querySelector('[name="latitud"]').value = lat;
-            document.querySelector('[name="longitud"]').value = lng;
+            // Actualizar el campo oculto del formulario con la lista de marcadores en formato JSON
+            document.getElementById('todos_los_marcadores').value = JSON.stringify(markers);
+
+            console.log(`Nuevo marcador agregado: [${lat}, ${lng}]`);
+            console.log("Lista actual de marcadores:", markers);
         });
+
+        // Botón para eliminar el último marcador
+        document.getElementById('removeLastMarker').addEventListener('click', function() {
+            if (markers.length > 0) {
+                // Eliminar el último marcador del mapa
+                var lastMarker = markers.pop();
+                map.removeLayer(lastMarker);
+
+                // Actualizar el campo oculto del formulario
+                document.getElementById('todos_los_marcadores').value = JSON.stringify(markers);
+
+                console.log("Último marcador eliminado.");
+                console.log("Lista actual de marcadores:", markers);
+            } else {
+                console.log("No hay marcadores para eliminar.");
+            }
+        });
+
+
+        
+
+
     </script>
 </body>
 </html>

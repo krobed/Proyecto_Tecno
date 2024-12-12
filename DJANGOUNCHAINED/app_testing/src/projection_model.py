@@ -171,4 +171,4 @@ if __name__ == "__main__":
 
     # llamo a la api de visualizacion
     visualization_app.generate_visualizations(geojson_graph_list, debug_shapes=debug_shapes,buildings=buildings_list)
-    visualization_app.app.run_server(debug=True)
+    visualization_app.app.run_server(debug=True,host='127.0.0.1', port='8050')
