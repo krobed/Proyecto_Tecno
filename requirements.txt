@@ -14,3 +14,5 @@ pyyaml~=6.0.2
 dash~=2.18.2
 plotly~=5.24.1
 Flask~=3.0.3
+geojson~=3.1.0
+turfpy~=0.0.8

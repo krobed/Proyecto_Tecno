@@ -1,4 +1,0 @@
-# Escenario base: Incluir geojson con matriz OD de santiago, calculado anteriormente.
-base_scenario_geojson_path: r"C:\Users\pablo\Escritorio\EL6101-Proyecto_Tecno\data_manipulation\GeoJSON_With_Viajes.geojson"
-
-
