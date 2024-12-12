@@ -1,0 +1,43 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+  <header class="masthead mb-auto">
+    <div class="inner">
+      <h3 class="masthead-brand">ÑukeMapu</h3>
+    </div>
+  </header>
+ 
+  <main role="main" class="inner cover">
+    <h1 class="cover-heading">Planificador de Espacios Inteligente</h1>
+    <p class="lead">Seleccione a continuación los datos que desea observar</p>
+    <p class="lead">
+      <div class="input-group mb-3">
+        <form method="POST" action="goto">
+          {% csrf_token %}
+          <select class="custom-select" name="comuna">
+            <option selected>Comuna</option>
+            {% for comuna in Comunas %}
+            <option value={{ forloop.counter }}>{{ comuna.nombre }}</option>
+            {% endfor %}
+          </select>
+          <p>
+            <div>
+              <button type="submit" class="btn btn-lg btn-secondary" name="densidad">Densidad Poblacional</button>
+              <button type="submit" class="btn btn-lg btn-secondary" name="eod" >Densidad de Viajes</button>
+            </div>
+          </p>
+        </form> 
+      </div>
+      
+    </p>
+  </main>
+ 
+  <footer class="mastfoot mt-auto">
+    <div class="inner">
+      
+    </div>
+  </footer>
+</div>
+{% endblock content %}

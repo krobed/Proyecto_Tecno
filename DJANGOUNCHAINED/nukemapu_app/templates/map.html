@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interactivo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map-container {
+            width: 80%; /* Ancho del contenedor del mapa */
+            max-width: 800px; /* Máximo ancho */
+            height: 70%; /* Altura del contenedor */
+            max-height: 600px; /* Máxima altura */
+            border: 2px solid #ccc; /* Borde del contenedor */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+            border-radius: 10px; /* Bordes redondeados */
+            background-color: #fff; /* Fondo del contenedor */
+        }
+        #map {
+            width: 100%; /* El mapa ocupa todo el contenedor */
+            height: 100%;
+            border-radius: 10px; /* Bordes redondeados */
+        }
+        h1 {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #333;
+        }
+        #coordinates {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            color: #555;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <h1>Mapa Interactivo</h1>
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+    <form method="POST" action="goto">
+        <div id="coordinates">
+            Latitud: <span id="lat"></span>, Longitud: <span id="lng"></span>
+
+            <button type="submit" class="btn btn-lg btn-secondary" name="">Buscar</button>
+        </div>
+    </form> 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Inicializar el mapa centrado en Santiago de Chile
+        var map = L.map('map').setView([-33.4489, -70.6693], 13); // Zoom ajustado a 13 para vista de ciudad
+    
+        // Agregar una capa de mapa base
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+    
+        // Variable para almacenar el marcador actual
+        var currentMarker = null;
+    
+        // Agregar un evento para obtener latitud y longitud al hacer clic
+        map.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+    
+            // Mostrar las coordenadas en el HTML
+            document.getElementById('lat').textContent = lat.toFixed(6);
+            document.getElementById('lng').textContent = lng.toFixed(6);
+    
+            // Si ya existe un marcador, eliminarlo
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+    
+            // Crear y agregar un nuevo marcador en el mapa
+            currentMarker = L.marker([lat, lng]).addTo(map);
+    
+            // Enviar las coordenadas al servidor
+            fetch('/guardar-coordenadas/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') // Agregar CSRF token
+                },
+                body: JSON.stringify({
+                    latitud: lat,
+                    longitud: lng
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.mensaje) {
+                    alert(data.mensaje);
+                } else if (data.error) {
+                    alert("Error: " + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    
+        // Función para obtener el token CSRF
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>

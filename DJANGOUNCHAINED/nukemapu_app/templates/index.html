@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+  img {
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  height: 100vh;
+  color: #fff;
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+  font-family: Arial, sans-serif;
+  text-align: center;
+        }
+</style>
+
+<header class="masthead mb-auto">
+  <div class="inner">
+    <h3 class="masthead-brand">ÑukeMapu</h3>
+  </div>
+</header>
+<img src="{% static 'image.png' %}" alt="Django Unchained" id="django-image">
+<form method="POST" action="">
+  {% csrf_token %}
+  <p>
+    <div class="buttons">
+      <button type="submit" class="btn btn-lg btn-secondary" name="mapa">Mapa</button>
+      <button type="submit" class="btn btn-lg btn-secondary" name="data" >Data</button>
+    </div>
+  </p>
+</form>
+{% endblock content %}
