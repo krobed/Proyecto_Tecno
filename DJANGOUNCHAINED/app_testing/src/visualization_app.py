@@ -18,12 +18,12 @@ def validate_geojson(data_geojson):
 
 # Crear las opciones para el dropdown
 def get_comuna_options(data_geojson):
-    comunas = data_geojson['Comuna'].unique()
+    comunas = data_geojson['Comuna'].dropna().unique()  # Eliminar valores NaN o None
     return [{'label': comuna, 'value': comuna} for comuna in comunas]
 
 
 # Crear una función de actualización de la figura coroplética
-def create_figure(data_geojson, selected_comuna):
+def create_figure(data_geojson, selected_comuna, debug_shapes, buildings):
     if not selected_comuna:
         return {}
 
@@ -56,11 +56,26 @@ def create_figure(data_geojson, selected_comuna):
     )
 
     fig.update_traces(marker_opacity=0.6)
+
+    if buildings:
+        # Añadir puntos de edificios al mapa
+        for building in buildings:
+            coords = building['coords']
+            building_type = building['type']
+            fig.add_scattermapbox(
+                lon=[coords[1]],
+                lat=[coords[0]],
+                mode="markers",
+                marker=dict(size=10,
+                            color=px.colors.qualitative.Set1[hash(building_type) % len(px.colors.qualitative.Set1)]),
+                name=building_type
+            )
+
     return fig
 
 
 # Función principal para generar múltiples visualizaciones
-def generate_visualizations(geojson_graph_list):
+def generate_visualizations(geojson_graph_list, buildings, debug_shapes):
     layouts = []
 
     for geojson_path, graph_name in geojson_graph_list:
@@ -98,23 +113,24 @@ def generate_visualizations(geojson_graph_list):
             Output(f'choropleth-map-{graph_name}', 'figure'),
             [Input(f'comuna-dropdown-{graph_name}', 'value')]
         )
-        def update_map(selected_comuna, data_geojson=data_geojson):
-            return create_figure(data_geojson, selected_comuna)
+        def update_map(selected_comuna, data_geojson=data_geojson, buildings=buildings):
+            return create_figure(data_geojson, selected_comuna, debug_shapes, buildings)
 
 
 # Función para ejecutar el servidor desde otro módulo
-def run_app(geojson_graph_list: list[(str, str)]):
+def run_app(geojson_graph_list: list[(str, str)], buildings: list[dict], debug_shapes=True):
     """
     Ejecuta la aplicacion de visualización de archivos GeoJSON con el formato
     estandar de pares OD definidos por comunas
 
     Args:
         geojson_graph_list: Una lista de tuplas del estilo (path_archivo_geojson, nombre_visualizacion).
+        buildings: Lista de diccionarios con información de edificios a agregar como puntos.
 
     La idea seria que la primera tupla siemrpe sea la visualización base de OD de comuans de santiago.
     y todas las tuplas que vienen sean "escenarios" distintos, con nombres distintos.
     """
-    generate_visualizations(geojson_graph_list)
+    generate_visualizations(geojson_graph_list, buildings, debug_shapes)
     app.run_server(debug=True)
 
 

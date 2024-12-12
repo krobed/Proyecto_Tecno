@@ -8,7 +8,7 @@ from turfpy.transformation import circle
 from geojson import Point as GeoJsonPoint
 
 # Indica donde esta el yaml de configuracion. hay que rellenarlo
-YAML_CONFIG_PATH = './config/config.yaml'
+YAML_CONFIG_PATH = 'config.yaml'
 
 # APLICACION DE AJUSTES DE CONFIGURACION ##########################
 with open(YAML_CONFIG_PATH, 'r') as f:
@@ -170,5 +170,5 @@ if __name__ == "__main__":
     ]
 
     # llamo a la api de visualizacion
-    visualization_app.generate_visualizations(geojson_graph_list)
+    visualization_app.generate_visualizations(geojson_graph_list, debug_shapes=debug_shapes,buildings=buildings_list)
     visualization_app.app.run_server(debug=True)
