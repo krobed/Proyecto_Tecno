@@ -41,10 +41,10 @@ def formulario_view(request):
                 l.append({'type':estructura,'coordinates':marcador})
             # Procesar la lista de marcadores
             
-            if not os.path.exists(f'{yaml_path}/calculation_request.yaml'):
-                yamil =open(f'{yaml_path}/calculation_request.json', 'x',)
+            if not os.path.exists(f'{yaml_path}/calculation_request_1.json'):
+                yamil =open(f'{yaml_path}/calculation_request_1.json', 'x',)
             else:
-                yamil =  open(f'{yaml_path}/calculation_request.json', 'w',)
+                yamil =  open(f'{yaml_path}/calculation_request_1.json', 'w',)
             
             json.dump({'request':l,'timestamp':str(dt.now())},yamil)
             
