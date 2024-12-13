@@ -1,6 +1,7 @@
 import visualization_app
 
 import yaml
+import json
 import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point
@@ -18,7 +19,7 @@ with open(YAML_CONFIG_PATH, 'r') as f:
 debug_shapes = config_data['debugging']
 output_directory = config_data['output_directory']
 BASE_SCENARIO = config_data['base_scenario_geojson_path']
-YAML_REQUEST_PATH = config_data["request_yaml"]
+JSON_REQUEST_PATH = config_data["request_json"]
 YAML_TEMPLATES_PATH = config_data["building_templates_yaml"]
 YAML_CARACTERIZACION = config_data["caracterizacion_comunas_yaml"]
 #############################################################
@@ -34,15 +35,20 @@ with open(YAML_TEMPLATES_PATH, 'r') as f:
 
 # CARGA SOLICITUDES ###########################################
 # Extraigo datos de edificios para solicitud
-with open(YAML_REQUEST_PATH, 'r') as f:
-    requests_dict: dict = yaml.load(f, Loader=yaml.SafeLoader)
+with open(JSON_REQUEST_PATH, 'r') as f:
+    requests_dict: dict = json.load(f)
 
-raw_requests_list: list[list[str, list[float, float]]] = requests_dict["requests"]
+# print(requests_dict)
+
+raw_requests_list: list[dict] = requests_dict["request"]
 # print(raw_requests_list)
 
 # Agrego edificios a la lista
 buildings_list = []
-for building_type, building_coords in raw_requests_list:
+
+for building in raw_requests_list:
+    building_type = building["type"]
+    building_coords = (building["coordinates"]["lat"], building["coordinates"]["lng"])
 
     if building_type not in building_template_data:
         print(f"{building_type} no es un tipo de edificio válido!")
