@@ -1,3 +1,8 @@
+from app_testing.src.mapmakereodtest import map_maker_eod
+from app_testing.src.mapmakertest import map_maker
+# import app_testing.src.projection_model
+
+
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
@@ -7,10 +12,10 @@ import sys
 import os
 import yaml
 import numpy as np
+
 path = os.path.abspath(r"")
 print(path)
-from app_testing.src.mapmakereodtest import map_maker_eod
-from app_testing.src.mapmakertest import map_maker
+
 
 pato = path
 
@@ -31,30 +36,29 @@ def formulario_view(request):
             estructura = form.cleaned_data['estructura']
             estructura = estructura.lower()
             if estructura == 'parque':
-                estructura ='parque_grande'
+                estructura = 'parque_grande'
             else:
                 estructura = 'complejo_apartamentos'
-            
+
             marcadores = json.loads(todos_los_marcadores) if todos_los_marcadores else []
             l = []
             for marcador in marcadores:
-                l.append({'type':estructura,'coordinates':marcador})
+                l.append({'type': estructura, 'coordinates': marcador})
             # Procesar la lista de marcadores
-            
+
             if not os.path.exists(f'{yaml_path}/calculation_request_1.json'):
-                yamil =open(f'{yaml_path}/calculation_request_1.json', 'x',)
+                yamil = open(f'{yaml_path}/calculation_request_1.json', 'x', )
             else:
-                yamil =  open(f'{yaml_path}/calculation_request_1.json', 'w',)
-            
-            json.dump({'request':l,'timestamp':str(dt.now())},yamil)
-            
+                yamil = open(f'{yaml_path}/calculation_request_1.json', 'w', )
+
+            json.dump({'request': l, 'timestamp': str(dt.now())}, yamil)
+
             yamil.close()
+
             return HttpResponse(f"Se recibieron {len(marcadores)} marcadores: {marcadores}.")
     else:
         form = CoordenadasForm()
     return render(request, 'formulario.html', {'form': form})
-
-
 
 
 def home(request):
