@@ -1,0 +1,12 @@
+# Escenario base: Incluir geojson con matriz OD de santiago, calculado anteriormente.
+base_scenario_geojson_path: C:\Users\pablo\Escritorio\EL6101-Proyecto_Tecno\DJANGOUNCHAINED\app_testing\app_files\Matriz_OD_BASE_COMUNAS.geojson
+
+# Directorios
+output_directory: /home/winkrobed/Proyecto_Tecno/DJANGOUNCHAINED/app_testing/app_files
+
+# Configuracion de ejecucion
+request_json: C:\Users\pablo\Escritorio\EL6101-Proyecto_Tecno\DJANGOUNCHAINED\app_testing\src\requests\calculation_request_1.json
+building_templates_yaml: C:\Users\pablo\Escritorio\EL6101-Proyecto_Tecno\DJANGOUNCHAINED\app_testing\src\config\building_templates.yaml
+caracterizacion_comunas_yaml: C:\Users\pablo\Escritorio\EL6101-Proyecto_Tecno\DJANGOUNCHAINED\app_testing\src\config\caracterizacion_comunas.yaml
+
+debugging: False

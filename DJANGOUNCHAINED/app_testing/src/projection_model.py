@@ -8,6 +8,7 @@ from shapely.geometry import Point
 from turfpy.transformation import circle
 from geojson import Point as GeoJsonPoint
 
+
 # Indica donde esta el yaml de configuracion. hay que rellenarlo
 YAML_CONFIG_PATH = 'config.yaml'
 
@@ -72,6 +73,8 @@ print(f"\nLista de edificios a simular: ------------------")
 for building in buildings_list:
     print(building)
 print("---------------------------------------------------")
+
+
 ######################################################
 
 
@@ -165,10 +168,9 @@ def apply_multiple_gravitational_characteristic_models(buildings: list[dict], in
 
 ##############################################
 
-# Ejecutable
-if __name__ == "__main__":
-
-    output_path = apply_multiple_gravitational_characteristic_models(buildings_list, BASE_SCENARIO, caracterizacion_comunas)
+def main():
+    output_path = apply_multiple_gravitational_characteristic_models(buildings_list, BASE_SCENARIO,
+                                                                     caracterizacion_comunas)
 
     geojson_graph_list = [
         (BASE_SCENARIO, "Escenario base - Numero viajes de destino a comuna diario - EOD 2012 /EMS 2024"),
@@ -176,5 +178,10 @@ if __name__ == "__main__":
     ]
 
     # llamo a la api de visualizacion
-    visualization_app.generate_visualizations(geojson_graph_list, debug_shapes=debug_shapes,buildings=buildings_list)
+    visualization_app.generate_visualizations(geojson_graph_list, debug_shapes=debug_shapes, buildings=buildings_list)
     visualization_app.app.run_server(debug=True)
+
+
+# Ejecutable
+if __name__ == "__main__":
+    main()
